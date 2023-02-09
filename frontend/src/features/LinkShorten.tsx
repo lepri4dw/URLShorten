@@ -1,12 +1,22 @@
-import React, {useState} from 'react';
+import React, {FormEvent, useState} from 'react';
 import {Grid, Link, TextField, Typography} from "@mui/material";
 import {LoadingButton} from "@mui/lab";
+import {useAppDispatch, useAppSelector} from "../app/hooks";
+import {fetchShortUrl, selectLink, selectLoading} from "./linksSlice";
 
 const LinkShorten = () => {
+  const dispatch = useAppDispatch();
+  const shortUrl = useAppSelector(selectLink);
+  const loading = useAppSelector(selectLoading);
   const [state, setState] = useState('');
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState(e.target.value);
   };
+
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    await dispatch(fetchShortUrl(state));
+  }
 
   return (
     <div style={{textAlign: 'center'}}>
@@ -15,7 +25,7 @@ const LinkShorten = () => {
           <Typography variant="h4">Shorten your URL!</Typography>
         </Grid>
         <Grid item>
-          <form>
+          <form onSubmit={onSubmit} id="shortForm">
             <TextField
               id="text" label="Shorten your URL!"
               value={state}
@@ -25,14 +35,14 @@ const LinkShorten = () => {
           </form>
         </Grid>
         <Grid item>
-          <LoadingButton loadingIndicator="Loading…" type="submit" color="primary"
+          <LoadingButton loading={loading} form="shortForm" loadingIndicator="Loading…" type="submit" color="primary"
                          variant="contained">Shorten</LoadingButton>
         </Grid>
         <Grid item>
           <Typography variant="subtitle1">Your link now looks like this: </Typography>
         </Grid>
         <Grid item>
-          <Link></Link>
+          {shortUrl && <Link href={'http://localhost:8000/' + shortUrl.shortUrl} target="_blank">{'http://localhost:8000/' + shortUrl.shortUrl}</Link>}
         </Grid>
       </Grid>
 
