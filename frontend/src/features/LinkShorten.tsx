@@ -16,7 +16,8 @@ const LinkShorten = () => {
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     await dispatch(fetchShortUrl(state));
-  }
+    setState('');
+  };
 
   return (
     <div style={{textAlign: 'center'}}>
@@ -28,7 +29,7 @@ const LinkShorten = () => {
           <form onSubmit={onSubmit} id="shortForm">
             <TextField
               id="text" label="Shorten your URL!"
-              value={state}
+              value={state} type="url"
               onChange={inputChangeHandler}
               name="text" required
             />

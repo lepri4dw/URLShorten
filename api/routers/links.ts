@@ -3,21 +3,16 @@ import Link from "../models/Link";
 
 const linksRouter = express.Router();
 
-// const getRandomWord =() => {
-//   const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-//   let word = '';
-//
-//   for (let i = 0; i < 8; i++) {
-//     word += letters[Math.floor(Math.random() * letters.length)];
-//   }
-//    const wordFromDb = await Link.findOne({shortUrl: word});
-//
-//    if (wordFromDb) {
-//    word = getRandomWord();
-//    }
-//
-//   return word;
-// }
+const getRandomWord =() => {
+  const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let word = '';
+
+  for (let i = 0; i < 8; i++) {
+    word += letters[Math.floor(Math.random() * letters.length)];
+  }
+
+  return word;
+}
 
 linksRouter.get('/:shortUrl', async (req, res) => {
   try {
@@ -35,13 +30,13 @@ linksRouter.get('/:shortUrl', async (req, res) => {
 
 linksRouter.post('/links', async (req, res) => {
   try {
-    const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    let word = '';
+    let word = getRandomWord();
+    let wordFromDb = await Link.findOne({shortUrl: word});
 
-    for (let i = 0; i < 8; i++) {
-      word += letters[Math.floor(Math.random() * letters.length)];
+    while (wordFromDb) {
+      word = getRandomWord();
+      wordFromDb = await Link.findOne({shortUrl: word});
     }
-
 
     const linkData = {
       shortUrl: word,

@@ -11,7 +11,7 @@ interface LinksState {
 const initialState: LinksState = {
   item: null,
   loading: false,
-}
+};
 
 export const fetchShortUrl = createAsyncThunk<Link, string>(
   'links/fetch',
@@ -19,7 +19,7 @@ export const fetchShortUrl = createAsyncThunk<Link, string>(
     const result = await axiosApi.post<Link>('/links', {originalUrl: url});
     return result.data;
   }
-)
+);
 
 const linksSlice = createSlice({
   name: 'links',
